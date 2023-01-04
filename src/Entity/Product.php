@@ -3,16 +3,15 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * THe Manufacturer
+ * THe product
  * Many products to one Manufacturer
  * @ORM\Entity()
  */
 #[ApiResource]
-class Manufacturer
+class Product
 {
     /**
      * ID of manifacturer
@@ -21,6 +20,13 @@ class Manufacturer
      * @ORM\Column(type="integer")
      */
     private ?int $id = null;
+
+    /**
+     *  mpr of manufacturer
+     * @var string|null
+     * @ORM\Column()
+     */
+    private ?string $mpn = null;
 
     /**
      * NAME of manifacturer
@@ -37,47 +43,34 @@ class Manufacturer
     private string $description = '';
 
     /**
-     * The country code for manufacturer
-     * @var string
-     * @ORM\Column(length=3)
-     */
-    private string $countryCode = '';
-
-    /**
      * @var \DateTimeInterface|null the date that manufacturer listed
      * @ORM\Column(type="datetime")
      */
-    private ?\DateTimeInterface $listedDate = null;
+    private ?\DateTimeInterface $issueDate = null;
 
     /**
-     * @var Product[] Available products from this manufacturer
-     *
-     * @ORM\OneToMany(targetEntity="Product", mappedBy="manufacturer", cascade={"persist","remove"})
+     * the manufacturer of the product
+     * @var Manufacturer|null
+     * @ORM\ManyToOne(targetEntity="Manufacturer", inversedBy="products")
      */
-    private iterable $products;
+    private ?Manufacturer $manufacturer = null;
 
-
-    public function __construct()
+    /**
+     * @return Manufacturer|null
+     */
+    public function getManufacturer(): ?Manufacturer
     {
-        $this->products = new ArrayCollection();
+        return $this->manufacturer;
     }
 
     /**
-     * @return iterable
+     * @param Manufacturer|null $manufacturer
      */
-    public function getProducts(): iterable|ArrayCollection
+    public function setManufacturer(?Manufacturer $manufacturer): void
     {
-        return $this->products;
+        $this->manufacturer = $manufacturer;
     }
-
-    /**
-     * @param iterable $products
-     */
-    public function setProducts(iterable $products): void
-    {
-        $this->products = $products;
-    }
-
+ 
     /**
      * ID of the Manifacturer
      * @return int|null
@@ -121,38 +114,36 @@ class Manufacturer
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCountryCode(): string
+    public function getMpn(): ?string
     {
-        return $this->countryCode;
+        return $this->mpn;
     }
 
     /**
-     * @param string $countryCode
+     * @param string|null $mpn
      */
-    public function setCountryCode(string $countryCode): void
+    public function setMpn(?string $mpn): void
     {
-        $this->countryCode = $countryCode;
+        $this->mpn = $mpn;
     }
+
 
     /**
      * @return \DateTimeInterface|null
      */
-    public function getListedDate(): ?\DateTimeInterface
+    public function getIssueDate(): ?\DateTimeInterface
     {
-        return $this->listedDate;
+        return $this->issueDate;
     }
 
     /**
      * @param \DateTimeInterface|null $listedDate
      */
-    public function setListedDate(?\DateTimeInterface $listedDate): void
+    public function setIssueDate(?\DateTimeInterface $issueDate): void
     {
-        $this->listedDate = $listedDate;
+        $this->issueDate = $issueDate;
     }
-
-
-
 
 }
