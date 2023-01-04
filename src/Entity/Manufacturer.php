@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * THe Manufacturer
@@ -27,6 +28,7 @@ class Manufacturer
      * @var int|null
      * @ORM\Column()
      */
+    #[Assert\NotBlank]
     private string $name = '';
 
     /**
@@ -34,6 +36,7 @@ class Manufacturer
      * @var string
      * @ORM\Column(type="text")
      */
+    #[Assert\NotBlank]
     private string $description = '';
 
     /**
@@ -41,12 +44,14 @@ class Manufacturer
      * @var string
      * @ORM\Column(length=3)
      */
+    #[Assert\NotBlank]
     private string $countryCode = '';
 
     /**
      * @var \DateTimeInterface|null the date that manufacturer listed
      * @ORM\Column(type="datetime")
      */
+    #[Assert\NotNull]
     private ?\DateTimeInterface $listedDate = null;
 
     /**
