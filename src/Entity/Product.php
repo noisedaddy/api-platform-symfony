@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Odm\Filter\OrderFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Odm\Filter\SearchFilter;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,11 +13,27 @@ use Doctrine\ORM\Mapping as ORM;
  * Many products to one Manufacturer
  * @ORM\Entity()
  */
-#[ApiResource]
+#[
+    ApiResource,
+    ApiFilter(
+        SearchFilter::class,
+        properties: [
+            'name'=> SearchFilter::STRATEGY_PARTIAL,
+            'description'=> SearchFilter::STRATEGY_PARTIAL,
+            'manufacturer.countryCode'=> SearchFilter::STRATEGY_EXACT,
+        ]
+    ),
+    ApiFilter(
+        OrderFilter::class,
+        properties: [
+            'issueDate'
+        ]
+    )
+]
 class Product
 {
     /**
-     * ID of manifacturer
+     * ID of product
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -22,21 +41,21 @@ class Product
     private ?int $id = null;
 
     /**
-     *  mpr of manufacturer
+     *  mpr of product
      * @var string|null
      * @ORM\Column()
      */
     private ?string $mpn = null;
 
     /**
-     * NAME of manifacturer
+     * NAME of product
      * @var int|null
      * @ORM\Column()
      */
     private string $name = '';
 
     /**
-     * Description of manufacturer
+     * Description of product
      * @var string
      * @ORM\Column(type="text")
      */
@@ -72,7 +91,7 @@ class Product
     }
  
     /**
-     * ID of the Manifacturer
+     * ID of the product
      * @return int|null
      */
     public function getId(): ?int
