@@ -17,7 +17,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[
     ApiResource(
-        paginationItemsPerPage: 5
+        paginationItemsPerPage: 5,
+        normalizationContext: ['groups' => ['product.read']],
+        denormalizationContext: ['groups' => ['product.product.write']]
     ),
     ApiFilter(
         SearchFilter::class,
@@ -49,7 +51,10 @@ class Product
      * @var string|null
      * @ORM\Column()
      */
-    #[Assert\NotNull]
+    #[
+        Assert\NotNull,
+        Groups(['product.read','product.write'])
+    ]
     private ?string $mpn = null;
 
     /**
@@ -59,6 +64,7 @@ class Product
      */
     #[
         Assert\NotBlank,
+        Groups(['product.read', 'product.write'])
     ]
     private string $name = '';
 
@@ -67,14 +73,20 @@ class Product
      * @var string
      * @ORM\Column(type="text")
      */
-    #[Assert\NotBlank]
+    #[
+        Assert\NotBlank,
+        Groups(['product.read', 'product.write'])
+    ]
     private string $description = '';
 
     /**
      * @var \DateTimeInterface|null the date that manufacturer listed
      * @ORM\Column(type="datetime")
      */
-    #[Assert\NotNull]
+    #[
+        Assert\NotNull,
+        Groups(['product.read'])
+    ]
     private ?\DateTimeInterface $issueDate = null;
 
     /**
@@ -82,6 +94,9 @@ class Product
      * @var Manufacturer|null
      * @ORM\ManyToOne(targetEntity="Manufacturer", inversedBy="products")
      */
+    #[
+        Groups(['product.read'])
+    ]
     private ?Manufacturer $manufacturer = null;
 
     /**
