@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Odm\Filter\SearchFilter;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -15,7 +16,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity()
  */
 #[
-    ApiResource,
+    ApiResource(
+        paginationItemsPerPage: 5
+    ),
     ApiFilter(
         SearchFilter::class,
         properties: [
@@ -54,7 +57,9 @@ class Product
      * @var int|null
      * @ORM\Column()
      */
-    #[Assert\NotBlank]
+    #[
+        Assert\NotBlank,
+    ]
     private string $name = '';
 
     /**
