@@ -22,3 +22,37 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    product.date_filter:
+      parent: 'api_platform.doctrine.orm.date_filter'
+      arguments: [ { issueDate: ~ } ]
+      tags:  [ 'api_platform.filter' ]
+      # The following are mandatory only if a _defaults section is defined with inverted values.
+      # You may want to isolate filters in a dedicated file to avoid adding the following lines.
+      autowire: false
+      autoconfigure: false
+      public: false
+    product.search_filter:
+      parent: 'api_platform.doctrine.orm.search_filter'
+      arguments: [
+        {
+          name: 'partial' ,
+          description: 'partial' ,
+          manufacturer.countryCode: 'exact',
+          manufacturer.id: 'exact'
+        }
+      ]
+      tags: [ 'api_platform.filter' ]
+      # The following are mandatory only if a _defaults section is defined with inverted values.
+      # You may want to isolate filters in a dedicated file to avoid adding the following lines.
+      autowire: false
+      autoconfigure: false
+      public: false
+    product.order_filter:
+        parent: 'api_platform.doctrine.orm.order_filter'
+        arguments: [ { issueDate: ~ } ]
+        tags: [ 'api_platform.filter' ]
+        # The following are mandatory only if a _defaults section is defined with inverted values.
+        # You may want to isolate filters in a dedicated file to avoid adding the following lines.
+        autowire: false
+        autoconfigure: false
+        public: false

@@ -80,6 +80,7 @@ class Manufacturer
      *
      * @ORM\OneToMany(targetEntity="Product", mappedBy="manufacturer", cascade={"persist","remove"})
      */
+    #[ApiSubresource]
     private iterable $products;
 
 

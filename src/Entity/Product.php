@@ -6,7 +6,9 @@ use ApiPlatform\Doctrine\Odm\Filter\OrderFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Odm\Filter\SearchFilter;
+use ApiPlatform\Metadata\Get;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\DocBlock\Tags\Link;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -19,22 +21,29 @@ use Symfony\Component\Validator\Constraints as Assert;
     ApiResource(
         paginationItemsPerPage: 5,
         normalizationContext: ['groups' => ['product.read']],
-        denormalizationContext: ['groups' => ['product.product.write']]
+        denormalizationContext: ['groups' => ['product.product.write']],
+        /* we are using this filters with services.yaml config because ApiFilter attribute does not work */
+        filters: [
+            'product.date_filter',
+            'product.search_filter',
+            'product.order_filter'
+        ],
     ),
-    ApiFilter(
-        SearchFilter::class,
-        properties: [
-            'name'=> SearchFilter::STRATEGY_PARTIAL,
-            'description'=> SearchFilter::STRATEGY_PARTIAL,
-            'manufacturer.countryCode'=> SearchFilter::STRATEGY_EXACT,
-        ]
-    ),
-    ApiFilter(
-        OrderFilter::class,
-        properties: [
-            'issueDate'
-        ]
-    )
+//    ApiFilter(
+//        SearchFilter::class,
+//        properties: [
+//            'name'=> SearchFilter::STRATEGY_PARTIAL,
+//            'description'=> SearchFilter::STRATEGY_PARTIAL,
+//            'manufacturer.countryCode'=> SearchFilter::STRATEGY_EXACT,
+//            'manufacturer.id'=> SearchFilter::STRATEGY_EXACT,
+//        ]
+//    ),
+//    ApiFilter(
+//        OrderFilter::class,
+//        properties: [
+//            'issueDate'
+//        ]
+//    )
 ]
 class Product
 {
@@ -95,7 +104,8 @@ class Product
      * @ORM\ManyToOne(targetEntity="Manufacturer", inversedBy="products")
      */
     #[
-        Groups(['product.read'])
+        Groups(['product.read']),
+        Assert\NotNull
     ]
     private ?Manufacturer $manufacturer = null;
 
