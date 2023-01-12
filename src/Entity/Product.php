@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Odm\Filter\SearchFilter;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use Doctrine\ORM\Mapping as ORM;
 use phpDocumentor\Reflection\DocBlock\Tags\Link;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -45,6 +46,24 @@ use Symfony\Component\Validator\Constraints as Assert;
 //        ]
 //    )
 ]
+#[ApiResource(
+    uriTemplate: '/manufacturers/{manufacturer_id}/products/{id}',
+    uriVariables: [
+        'manufacturer_id' => new \ApiPlatform\Metadata\Link(fromClass: Manufacturer::class, toProperty: 'manufacturer'),
+        'id' => new \ApiPlatform\Metadata\Link(fromClass: Product::class),
+    ],
+    operations: [ new Get() ]
+)]
+#[ApiResource(
+    uriTemplate: '/manufacturers/{id}/products',
+    uriVariables: [
+        'id' => new \ApiPlatform\Metadata\Link(
+            fromClass: Manufacturer::class,
+            toProperty: 'manufacturer'
+        )
+    ],
+    operations: [new GetCollection()]
+)]
 class Product
 {
     /**

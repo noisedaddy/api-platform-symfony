@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
@@ -31,10 +32,20 @@ use Twig\Node\Expression\GetAttrExpression;
     ],
     paginationItemsPerPage: 5
 )]
+#[ApiResource(
+    uriTemplate: '/manufacturers/{id}/products',
+    uriVariables: [
+        'id' => new Link(
+            fromClass: Manufacturer::class,
+            fromProperty: 'products'
+        )
+    ],
+    operations: [new GetCollection()]
+)]
 class Manufacturer
 {
     /**
-     * ID of manifacturer
+     * ID of manufacturer
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -42,7 +53,7 @@ class Manufacturer
     private ?int $id = null;
 
     /**
-     * NAME of manifacturer
+     * NAME of manufacturer
      * @var int|null
      * @ORM\Column()
      */
@@ -80,7 +91,7 @@ class Manufacturer
      *
      * @ORM\OneToMany(targetEntity="Product", mappedBy="manufacturer", cascade={"persist","remove"})
      */
-    #[ApiSubresource]
+    #[Link(toProperty: 'manufacturer')] //this is Subresource for /api/manufacturers/{id}/products
     private iterable $products;
 
 
@@ -106,7 +117,7 @@ class Manufacturer
     }
 
     /**
-     * ID of the Manifacturer
+     * ID of the manufacturer
      * @return int|null
      */
     public function getId(): ?int
