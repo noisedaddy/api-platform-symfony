@@ -6,8 +6,12 @@ use ApiPlatform\Doctrine\Odm\Filter\OrderFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Odm\Filter\SearchFilter;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use Doctrine\ORM\Mapping as ORM;
 use phpDocumentor\Reflection\DocBlock\Tags\Link;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -22,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     ApiResource(
         paginationItemsPerPage: 5,
         normalizationContext: ['groups' => ['product.read']],
-        denormalizationContext: ['groups' => ['product.product.write']],
+        denormalizationContext: ['groups' => ['product.write']],
         /* we are using this filters with services.yaml config because ApiFilter attribute does not work */
         filters: [
             'product.date_filter',
@@ -113,7 +117,7 @@ class Product
      */
     #[
         Assert\NotNull,
-        Groups(['product.read'])
+        Groups(['product.read', 'product.write'])
     ]
     private ?\DateTimeInterface $issueDate = null;
 
@@ -123,7 +127,7 @@ class Product
      * @ORM\ManyToOne(targetEntity="Manufacturer", inversedBy="products")
      */
     #[
-        Groups(['product.read']),
+        Groups(['product.read', 'product.write']),
         Assert\NotNull
     ]
     private ?Manufacturer $manufacturer = null;
