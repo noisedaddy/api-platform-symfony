@@ -19,7 +19,6 @@ use Twig\Node\Expression\GetAttrExpression;
 /**
  * THe Manufacturer
  * Many products to one Manufacturer
- * @ORM\Entity()
  */
 #[ApiResource(
     operations: [
@@ -42,56 +41,56 @@ use Twig\Node\Expression\GetAttrExpression;
     ],
     operations: [new GetCollection()]
 )]
+#[ORM\Entity]
 class Manufacturer
 {
     /**
      * ID of manufacturer
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     /**
      * NAME of manufacturer
      * @var int|null
-     * @ORM\Column()
      */
     #[
         Assert\NotBlank,
         Groups(['product.read'])
     ]
+    #[ORM\Column]
     private string $name = '';
 
     /**
      * Description of manufacturer
      * @var string
-     * @ORM\Column(type="text")
      */
     #[Assert\NotBlank]
+    #[ORM\Column(type: 'text')]
     private string $description = '';
 
     /**
      * The country code for manufacturer
      * @var string
-     * @ORM\Column(length=3)
      */
     #[Assert\NotBlank]
+    #[ORM\Column(length: 3)]
     private string $countryCode = '';
 
     /**
      * @var \DateTimeInterface|null the date that manufacturer listed
-     * @ORM\Column(type="datetime")
      */
     #[Assert\NotNull]
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $listedDate = null;
 
     /**
      * @var Product[] Available products from this manufacturer
-     *
-     * @ORM\OneToMany(targetEntity="Product", mappedBy="manufacturer", cascade={"persist","remove"})
      */
-    #[Link(toProperty: 'manufacturer')] //this is Subresource for /api/manufacturers/{id}/products
+    #[Link(toProperty: 'manufacturer')]
+    #[ORM\OneToMany(targetEntity: 'Product', mappedBy: 'manufacturer', cascade: ['persist', 'remove'])] //this is Subresource for /api/manufacturers/{id}/products
     private iterable $products;
 
 

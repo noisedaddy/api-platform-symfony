@@ -20,7 +20,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * THe product
  * Many products to one Manufacturer
- * @ORM\Entity()
  */
 #[
     ApiResource(
@@ -68,68 +67,69 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     operations: [new GetCollection()]
 )]
+#[ORM\Entity]
 class Product
 {
     /**
      * ID of product
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     /**
      *  mpr of product
      * @var string|null
-     * @ORM\Column()
      */
     #[
         Assert\NotNull,
         Groups(['product.read','product.write'])
     ]
+    #[ORM\Column]
     private ?string $mpn = null;
 
     /**
      * NAME of product
      * @var int|null
-     * @ORM\Column()
      */
     #[
         Assert\NotBlank,
         Groups(['product.read', 'product.write'])
     ]
+    #[ORM\Column]
     private string $name = '';
 
     /**
      * Description of product
      * @var string
-     * @ORM\Column(type="text")
      */
     #[
         Assert\NotBlank,
         Groups(['product.read', 'product.write'])
     ]
+    #[ORM\Column(type: 'text')]
     private string $description = '';
 
     /**
      * @var \DateTimeInterface|null the date that manufacturer listed
-     * @ORM\Column(type="datetime")
      */
     #[
         Assert\NotNull,
         Groups(['product.read', 'product.write'])
     ]
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $issueDate = null;
 
     /**
      * the manufacturer of the product
      * @var Manufacturer|null
-     * @ORM\ManyToOne(targetEntity="Manufacturer", inversedBy="products")
      */
     #[
         Groups(['product.read', 'product.write']),
         Assert\NotNull
     ]
+    #[ORM\ManyToOne(targetEntity: 'Manufacturer', inversedBy: 'products')]
     private ?Manufacturer $manufacturer = null;
 
     /**
