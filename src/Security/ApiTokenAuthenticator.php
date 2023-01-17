@@ -30,9 +30,11 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
     public function supports(Request $request): ?bool
     {
         /**
-         * use - true or not use - false token authentication
+         * use - true or not use - false (token authentication)
+         * false - go throught the rest of aplication
+         * true - go to $this->>authenticate() method
          */
-        return $request->headers->has('x-api-token');
+        return str_starts_with($request->getPathInfo(), '/api/');
     }
 
     public function authenticate(Request $request): Passport
@@ -46,13 +48,10 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
 
         return new SelfValidatingPassport(
             new UserBadge($apiToken, function ($apiToken){
-
                 $user = $this->userRepository->findByApiToken($apiToken);
-
                 if (!$user) {
                     throw new UserNotFoundException();
                 }
-
                 return $user;
             })
         );
