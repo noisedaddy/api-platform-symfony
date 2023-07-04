@@ -67,6 +67,9 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     operations: [new GetCollection()]
 )]
+#[Get]
+#[Post(security: 'is_granted("ROLE_ADMIN")')]
+#[Put(security: 'is_granted("ROLE_USER") and object.getOwner() == user', securityMessage: 'A Product can be updated only by a product owner')]
 #[ORM\Entity]
 class Product
 {
@@ -131,6 +134,12 @@ class Product
     ]
     #[ORM\ManyToOne(targetEntity: 'Manufacturer', inversedBy: 'products')]
     private ?Manufacturer $manufacturer = null;
+
+    #[ORM\ManyToOne]
+    #[
+        Groups(['product.read', 'product.write']),
+    ]
+    private ?User $owner = null;
 
     /**
      * @return Manufacturer|null
@@ -221,6 +230,18 @@ class Product
     public function setIssueDate(?\DateTimeInterface $issueDate): void
     {
         $this->issueDate = $issueDate;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
+
+        return $this;
     }
 
 }
