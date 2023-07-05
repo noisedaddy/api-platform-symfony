@@ -135,7 +135,12 @@ class Product
     #[ORM\ManyToOne(targetEntity: 'Manufacturer', inversedBy: 'products')]
     private ?Manufacturer $manufacturer = null;
 
-    #[ORM\ManyToOne]
+    /**
+     * the manufacturer of the product
+     * @var User
+     * |null
+     */
+    #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'products')]
     #[
         Groups(['product.read', 'product.write']),
     ]
